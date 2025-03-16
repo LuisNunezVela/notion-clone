@@ -44,8 +44,8 @@ const [data, loading, error] = useCollection(
 );
     useEffect(() => {
         if (!data) return;
+        console.log("Firestore Data:", data.docs.map(doc => doc.data())); // Log fetched documents
 
-        
         const grouped = data.docs.reduce<{
             owner: RoomDocument[];
             editor: RoomDocument[];
@@ -86,7 +86,7 @@ const [data, loading, error] = useCollection(
                 <h2 className="text-gray-500 font-semibold text-sm">
                     No documents found
                 </h2>
-            ): (
+            ) : (
                 <>
                 <h2 className="text-gray-500 font-semibold text-sm">
                     My documents
@@ -98,9 +98,17 @@ const [data, loading, error] = useCollection(
             )}
             </div>
 
-            {/*List***/}
-
             {/*Compartidos conmigo*/}
+            {groupedData.editor.length > 0 && (
+                <>
+                    <h2 className="text-gray-500 font-semibold text-sm">
+                        Shared with me
+                    </h2>
+                    {groupedData.editor.map((doc) => (
+                        <SidebarOption key={doc.id} id={doc.id} href={`/doc/${doc.id}`} />
+                    ))}            
+                </>    
+            )}
             {/*List****/}
         </>
     )
@@ -111,10 +119,8 @@ const [data, loading, error] = useCollection(
                 <SheetTrigger><MenuIcon className="p-2 hover:opacity-30 rounded-lg" size={40} /></SheetTrigger>
                 <SheetContent side="left">
                     <SheetHeader>
-                    <SheetTitle>Menu</SheetTitle>
-                    <div>
-                        {menuOptions}
-                    </div>
+                        <SheetTitle>Menu</SheetTitle>
+                        <div>{menuOptions}</div>
                     </SheetHeader>
                 </SheetContent>
             </Sheet>
@@ -125,4 +131,4 @@ const [data, loading, error] = useCollection(
     </div>
   )
 }
-export default Sidebar
+export default Sidebar;
